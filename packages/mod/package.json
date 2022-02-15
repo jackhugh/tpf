@@ -1,0 +1,18 @@
+{
+	"name": "mod",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"dev": "tstl --watch --outDir ~/AppData/Roaming/Factorio/mods/tpf-new"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"typed-factorio": "^0.17.1"
+	},
+	"devDependencies": {
+		"typescript-to-lua": "^1.3.3"
+	}
+}

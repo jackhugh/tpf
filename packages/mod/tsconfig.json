@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"target": "esnext",
+		"lib": ["esnext"],
+		"moduleResolution": "node",
+		"types": ["typed-factorio/runtime"],
+		"strict": true,
+		"noUncheckedIndexedAccess": true,
+		"outDir": "./dist",
+		"rootDir": "./src"
+	},
+	"tstl": {
+		"luaTarget": "5.2"
+	}
+}
