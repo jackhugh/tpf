@@ -10,13 +10,13 @@ export interface ErrorBlueprintResponse {
 }
 export type BlueprintResponse = SuccessBlueprintResponse | ErrorBlueprintResponse;
 
-function blueprintRequest(req: PlayerBlueprint): BlueprintResponse {
+function blueprintRequest(blueprint: PlayerBlueprint): BlueprintResponse {
 	// validate here
 
-	if (!canPlayerBuild(req.username)) {
+	if (!canPlayerBuild(blueprint.username)) {
 		return { success: false, message: `Blueprint timeout` };
 	}
-	global.blueprintQueue.push(req);
+	global.blueprintQueue.push(blueprint);
 	return { success: true };
 }
 

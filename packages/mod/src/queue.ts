@@ -12,7 +12,7 @@ export type Blueprint = PlayerBlueprint;
 export type BlueprintQueue = Blueprint[];
 export type GhostQueue = [GhostEntity[], GhostEntity[]];
 
-const GHOSTS_PER_TICK = 1;
+const GHOSTS_PER_TICK = 10;
 
 export function processQueue() {
 	if (global.ghostQueue[0].length === 0 && global.ghostQueue[1].length === 0) {
