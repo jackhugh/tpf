@@ -1,6 +1,7 @@
-const TIME_BETWEEN_BLUEPRINTS = 60 * 60 * 5;
+// const TIME_BETWEEN_BLUEPRINTS = 60 * 60 * 5;
+const TIME_BETWEEN_BLUEPRINTS = 0;
 
-export function playerCanBuild(username: string) {
+export function canPlayerBuild(username: string) {
 	const player = global.players[username];
 	if (!player) return true;
 

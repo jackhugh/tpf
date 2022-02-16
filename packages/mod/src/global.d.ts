@@ -1,5 +1,5 @@
 import { Cells } from './base-cell';
-import { Queue } from './queue';
+import { BlueprintQueue, GhostQueue } from './queue';
 
 interface Player {
 	totalBlueprints: number;
@@ -12,7 +12,8 @@ type Players = Record<Player['username'], Player>;
 declare global {
 	const global: {
 		cells: Cells;
-		queue: Queue;
+		blueprintQueue: BlueprintQueue;
+		ghostQueue: GhostQueue;
 		players: Players;
 	};
 }

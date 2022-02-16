@@ -1,23 +1,23 @@
-import { buildBlueprint, generateChunks } from './build';
-import { Config } from './config';
+import { createGhosts, generateChunks } from './build';
 import * as baseCell from './config/cell-base.json';
+import * as config from './config/config.json';
 import { squareRadius } from './util';
 
-export type Cells = Array<Cell | undefined>;
+export type Cells = Array<CellBase | undefined>;
 
-export interface Cell {
+export interface CellBase {
 	index: number;
 	mapPosition: PositionTable;
-	cellPosition: PositionTable;
-	mapId: number;
+	gridPosition: PositionTable;
+	renderIdRef: number;
 }
 
-export function createBaseCell(cells: Cells, config: Config): Cell {
-	const cell = nextCell(cells, config);
+export function createBaseCell(): CellBase {
+	const cell = getNextCell();
 
 	generateChunks(cell.mapPosition, math.ceil(squareRadius(config.size)));
 
-	buildBlueprint(cell.mapPosition, baseCell);
+	createGhosts(cell.mapPosition, baseCell);
 
 	const mapId = printCellId(cell.index, {
 		x: cell.mapPosition.x,
@@ -26,7 +26,7 @@ export function createBaseCell(cells: Cells, config: Config): Cell {
 
 	return {
 		...cell,
-		mapId,
+		renderIdRef: mapId,
 	};
 }
 
@@ -35,31 +35,31 @@ function printCellId(id: number, position: PositionTable) {
 		color: [0, 0, 0, 0.8],
 		surface: game.surfaces[1]!,
 		target: position,
-		text: id,
+		text: id + 1,
 		scale: 6,
 		alignment: 'center',
 	});
 }
 
-export function nextCell(cells: Cells, config: Config) {
-	const index = nextCellIndex(cells);
-	const cellPosition = calcCellPosition(index, config);
-	const mapPosition = calcMapPosition(cellPosition, config);
+export function getNextCell() {
+	const index = nextCellIndex();
+	const gridPosition = calcCellPosition(index);
+	const mapPosition = calcMapPosition(gridPosition);
 
 	return {
 		index,
 		mapPosition,
-		cellPosition,
+		gridPosition,
 	};
 }
 
-function calcCellPosition(index: number, config: Config) {
+function calcCellPosition(index: number) {
 	return {
 		x: index % config.columns,
 		y: math.floor(index / config.columns),
 	};
 }
-function calcMapPosition(cellPosition: PositionTable, config: Config) {
+function calcMapPosition(cellPosition: PositionTable) {
 	const netSize = config.size - config.overlap;
 	const firstPosition = {
 		x: config.startPosition.x - (config.columns / 2) * netSize + netSize / 2,
@@ -71,8 +71,8 @@ function calcMapPosition(cellPosition: PositionTable, config: Config) {
 	};
 }
 
-function nextCellIndex(cells: Cells) {
-	const availableIndex = cells.findIndex((elem) => elem === undefined);
+function nextCellIndex() {
+	const availableIndex = global.cells.findIndex((elem) => elem === undefined);
 	if (availableIndex >= 0) return availableIndex;
-	return cells.length;
+	return global.cells.length;
 }

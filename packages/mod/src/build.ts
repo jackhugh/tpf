@@ -3,7 +3,7 @@ export function generateChunks(position: PositionTable, radius: number) {
 	game.surfaces[1]!.force_generate_chunk_requests();
 }
 
-export function buildBlueprint(position: PositionTable, blueprintString: string) {
+export function createGhosts(position: PositionTable, blueprintString: string) {
 	const inventory = game.create_inventory(1);
 	const [blueprint] = inventory.find_empty_stack();
 
@@ -13,12 +13,20 @@ export function buildBlueprint(position: PositionTable, blueprintString: string)
 		position: position,
 		surface: game.surfaces[1]!,
 	});
-
-	ghosts?.forEach((ghost) => {
-		if (ghost.valid) {
-			ghost.revive();
-		}
-	});
+	if (ghosts) {
+		global.ghostQueue[0]!.push(...ghosts);
+	}
 
 	inventory.destroy();
+}
+
+export function buildGhosts(ghosts: GhostEntity[]) {
+	const outstanding: GhostEntity[] = [];
+	ghosts.forEach((ghost) => {
+		if (ghost.valid) {
+			const [success] = ghost.revive();
+			if (!success) outstanding.push(ghost);
+		}
+	});
+	return outstanding;
 }

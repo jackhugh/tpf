@@ -1,9 +1,5 @@
-import { playerCanBuild } from './player';
-
-export interface BlueprintRequest {
-	blueprintString: string;
-	username: string;
-}
+import { canPlayerBuild } from './player';
+import { PlayerBlueprint } from './queue';
 
 export interface SuccessBlueprintResponse {
 	success: true;
@@ -14,13 +10,13 @@ export interface ErrorBlueprintResponse {
 }
 export type BlueprintResponse = SuccessBlueprintResponse | ErrorBlueprintResponse;
 
-function blueprintRequest(req: BlueprintRequest): BlueprintResponse {
+function blueprintRequest(req: PlayerBlueprint): BlueprintResponse {
 	// validate here
 
-	if (!playerCanBuild(req.username)) {
-		return { success: false, message: 'Blueprint timeout' };
+	if (!canPlayerBuild(req.username)) {
+		return { success: false, message: `Blueprint timeout` };
 	}
-	global.queue.push({ status: 'unprocessed', blueprintRequest: req });
+	global.blueprintQueue.push(req);
 	return { success: true };
 }
 

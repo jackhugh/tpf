@@ -1,24 +1,34 @@
-import * as userExample from './config/user-example.json';
-import { createPlayerCell } from './player-cell';
+import * as playerBlueprint from './config/user-example.json';
+import remoteInterface from './interface';
 import { processQueue } from './queue';
 
 script.on_init(() => {
 	global.cells = [];
-	global.queue = [];
+	global.blueprintQueue = [];
+	global.ghostQueue = [[], []];
 	global.players = {};
+
+	if (remote.interfaces['freeplay']) {
+		remote.call('freeplay', 'set_disable_crashsite', true);
+		remote.call('freeplay', 'set_skip_intro', true);
+	}
 });
 
 script.on_event(defines.events.on_tick, () => {
-	processQueue(global.queue);
-});
-
-commands.add_command('add', '', () => {
-	const cell = createPlayerCell(global.cells, { blueprintString: userExample, username: 'dementedpeanut' });
-	global.cells[cell.index] = cell;
+	processQueue();
 });
 
 commands.add_command('rl', '', () => {
 	game.reload_mods();
+});
+
+commands.add_command('add', '', () => {
+	const response = remoteInterface.blueprintRequest({
+		type: 'player',
+		blueprintString: playerBlueprint,
+		username: 'testing',
+	});
+	game.print(serpent.block(response));
 });
 
 if (script.active_mods['gvv']) {

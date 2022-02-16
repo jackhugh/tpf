@@ -1,26 +1,47 @@
-import { BlueprintRequest } from './interface';
+import { buildGhosts as reviveGhosts } from './build';
 import { createPlayerCell } from './player-cell';
 
-interface UnprocessedBlueprint {
-	status: 'unprocessed';
-	blueprintRequest: BlueprintRequest;
+export interface PlayerBlueprint {
+	type: 'player';
+	username: string;
+	blueprintString: string;
 }
 
-interface ProcessingBlueprint {
-	status: 'processing';
-	blueprintRequest: BlueprintRequest;
-	ghosts: GhostEntity[];
+export type Blueprint = PlayerBlueprint;
+
+export type BlueprintQueue = Blueprint[];
+export type GhostQueue = [GhostEntity[], GhostEntity[]];
+
+const GHOSTS_PER_TICK = 1;
+
+export function processQueue() {
+	if (global.ghostQueue[0].length === 0 && global.ghostQueue[1].length === 0) {
+		createNextQueued();
+	}
+
+	const firstQueue = global.ghostQueue[0];
+	const secondQueue = global.ghostQueue[1];
+
+	if (firstQueue.length > 0) {
+		const ghostsPick = firstQueue.splice(0, GHOSTS_PER_TICK);
+		const outstanding = reviveGhosts(ghostsPick);
+		secondQueue.push(...outstanding);
+	} else if (secondQueue.length > 0) {
+		const ghostsPick = secondQueue.splice(0, GHOSTS_PER_TICK);
+		reviveGhosts(ghostsPick);
+	}
 }
 
-type QueuedBlueprint = UnprocessedBlueprint | ProcessingBlueprint;
+function createNextQueued() {
+	if (global.blueprintQueue.length === 0) return;
 
-export type Queue = QueuedBlueprint[];
-
-export function processQueue(queue: Queue) {
-	const nextQueued = queue[0];
+	const [nextQueued] = global.blueprintQueue.splice(0, 1);
 	if (!nextQueued) return;
 
-	queue[0] = nextQueued;
-	const cell = createPlayerCell(global.cells, nextQueued.blueprintRequest);
-	global.cells[cell.index] = cell;
+	switch (nextQueued.type) {
+		case 'player': {
+			createPlayerCell(nextQueued);
+			break;
+		}
+	}
 }

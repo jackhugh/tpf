@@ -1,28 +1,30 @@
-import { Cell, Cells, createBaseCell } from './base-cell';
-import { buildBlueprint } from './build';
-import * as config from './config/config.json';
-import { BlueprintRequest } from './interface';
+import { CellBase, createBaseCell } from './base-cell';
+import { createGhosts } from './build';
 import { playerHasBuilt } from './player';
+import { PlayerBlueprint } from './queue';
 
-export interface PlayerCell extends Cell {
+export interface PlayerCell extends CellBase {
 	username: string;
-	mapUsername: number;
+	renderUsernameRef: number;
+	type: 'player';
 }
 
-export function createPlayerCell(cells: Cells, blueprintRequest: BlueprintRequest): PlayerCell {
-	const baseCell = createBaseCell(cells, config);
+export function createPlayerCell(blueprint: PlayerBlueprint) {
+	const baseCell = createBaseCell();
 
-	buildBlueprint(baseCell.mapPosition, blueprintRequest.blueprintString);
+	createGhosts(baseCell.mapPosition, blueprint.blueprintString);
 
-	const mapUsername = printPlayerUsername(blueprintRequest.username, baseCell.mapPosition);
+	const mapUsername = printPlayerUsername(blueprint.username, baseCell.mapPosition);
 
-	playerHasBuilt(blueprintRequest.username);
+	playerHasBuilt(blueprint.username);
 
-	return {
+	const cell: PlayerCell = {
 		...baseCell,
-		username: blueprintRequest.username,
-		mapUsername,
+		type: 'player',
+		username: blueprint.username,
+		renderUsernameRef: mapUsername,
 	};
+	global.cells[cell.index] = cell;
 }
 
 function printPlayerUsername(username: string, position: PositionTable) {
