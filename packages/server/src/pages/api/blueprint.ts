@@ -1,7 +1,6 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { PlayerBlueprint } from 'mod/queue';
+import { PlayerBlueprintSubmission } from 'mod/player-blueprint';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { sendBlueprint } from '../../rcon';
+import { rconSend } from '../../rcon';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 	if (req.method !== 'POST') {
@@ -9,12 +8,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 		return;
 	}
 	const blueprintString = req.body.blueprint as string;
-	const blueprint: PlayerBlueprint = {
-		type: 'player',
+	const blueprint: PlayerBlueprintSubmission = {
 		username: 'testing',
 		blueprintString,
 	};
-	const response = await sendBlueprint(blueprint);
+	const response = await rconSend('blueprintSubmission', blueprint);
 	res.status(response.success ? 201 : 400).json(response);
 }
 

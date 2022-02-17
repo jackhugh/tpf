@@ -1,5 +1,4 @@
-import { BlueprintResponse } from 'mod/interface';
-import { PlayerBlueprint } from 'mod/queue';
+import interfaces from 'mod/interface';
 import { Rcon } from 'rcon-client';
 
 const rconConfig = {
@@ -8,15 +7,15 @@ const rconConfig = {
 	password: 'hello123',
 };
 
-export async function sendBlueprint(blueprint: PlayerBlueprint) {
-	const response: BlueprintResponse = await rconSend('blueprintRequest', blueprint);
-	return response;
-}
-
-async function rconSend(functionName: string, data: object) {
-	const message = `/silent-command rcon.print(remote.call('tpf', '${functionName}', '${JSON.stringify(data)}'))`;
+export async function rconSend<T extends keyof typeof interfaces>(
+	functionName: T,
+	data: Parameters<typeof interfaces[typeof functionName]>[0]
+) {
+	// TODO escape lua string
+	const encoded = JSON.stringify(data).replace("'", "'");
+	const message = `/silent-command rcon.print(remote.call('tpf', '${functionName}', '${encoded}'))`;
 	const rcon = await Rcon.connect(rconConfig);
 	const response = await rcon.send(message);
 	rcon.end();
-	return JSON.parse(response);
+	return JSON.parse(response) as ReturnType<typeof interfaces[typeof functionName]>;
 }

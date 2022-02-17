@@ -1,7 +1,7 @@
 import { CellBase, createBaseCell } from './base-cell';
 import { createGhosts } from './build';
 import { playerHasBuilt } from './player';
-import { PlayerBlueprint } from './queue';
+import { PlayerBlueprint } from './player-blueprint';
 
 export interface PlayerCell extends CellBase {
 	username: string;
@@ -12,7 +12,7 @@ export interface PlayerCell extends CellBase {
 export function createPlayerCell(blueprint: PlayerBlueprint) {
 	const baseCell = createBaseCell();
 
-	createGhosts(baseCell.mapPosition, blueprint.blueprintString);
+	createGhosts(baseCell.mapPosition, blueprint.blueprintStack);
 
 	const mapUsername = printPlayerUsername(blueprint.username, baseCell.mapPosition);
 

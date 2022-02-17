@@ -5,3 +5,10 @@ export function squareRadius(size: number) {
 	x = x / 2;
 	return x;
 }
+
+export function createBlueprintStack(blueprintString: string) {
+	const inventory = game.create_inventory(1);
+	const stack = inventory.find_empty_stack()[0]!;
+	stack.import_stack(blueprintString);
+	return stack;
+}

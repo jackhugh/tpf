@@ -1,6 +1,14 @@
 // const TIME_BETWEEN_BLUEPRINTS = 60 * 60 * 5;
 const TIME_BETWEEN_BLUEPRINTS = 0;
 
+export interface Player {
+	totalBlueprints: number;
+	lastBlueprint: number;
+	username: string;
+}
+
+export type Players = Record<Player['username'], Player>;
+
 export function canPlayerBuild(username: string) {
 	const player = global.players[username];
 	if (!player) return true;

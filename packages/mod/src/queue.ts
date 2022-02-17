@@ -1,11 +1,6 @@
 import { buildGhosts as reviveGhosts } from './build';
+import { PlayerBlueprint } from './player-blueprint';
 import { createPlayerCell } from './player-cell';
-
-export interface PlayerBlueprint {
-	type: 'player';
-	username: string;
-	blueprintString: string;
-}
 
 export type Blueprint = PlayerBlueprint;
 
@@ -37,6 +32,7 @@ function createNextQueued() {
 
 	const [nextQueued] = global.blueprintQueue.splice(0, 1);
 	if (!nextQueued) return;
+	// TODO delete inventory
 
 	switch (nextQueued.type) {
 		case 'player': {
