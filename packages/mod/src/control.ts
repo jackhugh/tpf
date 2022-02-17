@@ -1,13 +1,18 @@
-import * as playerBlueprint from './config/user-example.json';
+import * as baseCellBlueprintString from './config/cell-base.json';
+import * as playerBlueprintString from './config/player-example.json';
 import interfaces from './interface';
 import { PlayerBlueprintSubmission } from './player-blueprint';
 import { processQueue } from './queue';
+import { createBlueprintStack } from './util';
+
+// TODO - better config system - seperate server + design configs?
 
 script.on_init(() => {
 	global.cells = [];
 	global.blueprintQueue = [];
 	global.ghostQueue = [[], []];
 	global.players = {};
+	global.baseCellBlueprintStack = createBlueprintStack(baseCellBlueprintString) as BlueprintItemStack;
 
 	if (remote.interfaces['freeplay']) {
 		remote.call('freeplay', 'set_disable_crashsite', true);
@@ -25,10 +30,10 @@ commands.add_command('rl', '', () => {
 
 commands.add_command('add', '', () => {
 	const response = interfaces.blueprintSubmission({
-		blueprintString: playerBlueprint,
 		username: 'testing',
+		blueprintString: playerBlueprintString,
 	});
-	game.print(serpent.block(response));
+	game.print(serpent.line(response));
 });
 
 remote.add_interface('tpf', {

@@ -9,6 +9,6 @@ export function squareRadius(size: number) {
 export function createBlueprintStack(blueprintString: string) {
 	const inventory = game.create_inventory(1);
 	const stack = inventory.find_empty_stack()[0]!;
-	stack.import_stack(blueprintString);
-	return stack;
+	const status = stack.import_stack(blueprintString);
+	return status === 0 ? (stack as BlueprintItemStack) : undefined;
 }

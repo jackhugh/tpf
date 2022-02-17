@@ -1,9 +1,6 @@
 import { createGhosts, generateChunks } from './build';
-import * as baseCellBlueprintString from './config/cell-base.json';
 import * as config from './config/config.json';
-import { createBlueprintStack, squareRadius } from './util';
-
-const baseCellBlueprintStack = createBlueprintStack(baseCellBlueprintString);
+import { squareRadius } from './util';
 
 export type Cells = Array<CellBase | undefined>;
 
@@ -19,7 +16,7 @@ export function createBaseCell(): CellBase {
 
 	generateChunks(cell.mapPosition, math.ceil(squareRadius(config.size)));
 
-	createGhosts(cell.mapPosition, baseCellBlueprintStack);
+	createGhosts(cell.mapPosition, global.baseCellBlueprintStack);
 
 	const mapId = printCellId(cell.index, {
 		x: cell.mapPosition.x,

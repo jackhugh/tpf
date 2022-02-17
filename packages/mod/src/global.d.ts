@@ -8,5 +8,6 @@ declare global {
 		blueprintQueue: BlueprintQueue;
 		ghostQueue: GhostQueue;
 		players: Players;
+		baseCellBlueprintStack: BlueprintItemStack;
 	};
 }

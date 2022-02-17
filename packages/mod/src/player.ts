@@ -1,5 +1,5 @@
-// const TIME_BETWEEN_BLUEPRINTS = 60 * 60 * 5;
-const TIME_BETWEEN_BLUEPRINTS = 0;
+// const SUMBISSION_TIMEOUT = 60 * 60 * 5;
+const SUMBISSION_TIMEOUT = 0;
 
 export interface Player {
 	totalBlueprints: number;
@@ -9,11 +9,14 @@ export interface Player {
 
 export type Players = Record<Player['username'], Player>;
 
-export function canPlayerBuild(username: string) {
+export function ticksUntilPlayerCanBuild(username: string) {
 	const player = global.players[username];
-	if (!player) return true;
+	if (!player) return 0;
 
-	return player.lastBlueprint + TIME_BETWEEN_BLUEPRINTS <= game.tick;
+	const nextBuild = player.lastBlueprint + SUMBISSION_TIMEOUT;
+	const ticksRemaining = nextBuild - game.tick;
+
+	return math.max(ticksRemaining, 0);
 }
 
 export function playerHasBuilt(username: string) {
