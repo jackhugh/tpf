@@ -11,21 +11,17 @@ export function validate(blueprint: PlayerBlueprint): true | string {
 	return true;
 }
 
-export interface PlayerBlueprintSubmission {
+export interface BlueprintSubmission {
 	username: string;
 	blueprintString: string;
 }
 
-export interface SuccessBlueprintResponse {
-	success: true;
-}
-export interface ErrorBlueprintResponse {
-	success: false;
+export interface BlueprintResponse {
+	success: boolean;
 	message: string;
 }
-export type BlueprintResponse = SuccessBlueprintResponse | ErrorBlueprintResponse;
 
-export function blueprintSubmission(submission: PlayerBlueprintSubmission): BlueprintResponse {
+export function blueprintSubmission(submission: BlueprintSubmission): BlueprintResponse {
 	const stack = createBlueprintStack(submission.blueprintString);
 	if (!stack) {
 		return { success: false, message: 'Invalid blueprint' };
@@ -38,7 +34,7 @@ export function blueprintSubmission(submission: PlayerBlueprintSubmission): Blue
 	};
 
 	const ticksRemaining = ticksUntilPlayerCanBuild(blueprint.username);
-	if (ticksRemaining !== 0) {
+	if (ticksRemaining > 0) {
 		const minutes = math.ceil(ticksRemaining / 60 / 60);
 		return {
 			success: false,
@@ -48,9 +44,16 @@ export function blueprintSubmission(submission: PlayerBlueprintSubmission): Blue
 
 	const validatedStatus = validate(blueprint);
 	if (validatedStatus !== true) {
-		return { success: false, message: validatedStatus };
+		return {
+			success: false,
+			message: validatedStatus,
+		};
 	}
-	global.blueprintQueue.push(blueprint);
 
-	return { success: true };
+	global.blueprintQueue.push(blueprint);
+	const posInQueue = global.blueprintQueue.length;
+	return {
+		success: true,
+		message: posInQueue === 1 ? 'Blueprint being built!' : `Blueprint in queue - position ${posInQueue}`,
+	};
 }

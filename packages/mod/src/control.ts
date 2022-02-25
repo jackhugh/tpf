@@ -1,7 +1,7 @@
 import * as baseCellBlueprintString from './config/cell-base.json';
 import * as playerBlueprintString from './config/player-example.json';
 import interfaces from './interface';
-import { PlayerBlueprintSubmission } from './player-blueprint';
+import { BlueprintSubmission } from './player-blueprint';
 import { processQueue } from './queue';
 import { createBlueprintStack } from './util';
 
@@ -38,7 +38,7 @@ commands.add_command('add', '', () => {
 
 remote.add_interface('tpf', {
 	blueprintSubmission: (submission: string) =>
-		game.table_to_json(interfaces.blueprintSubmission(game.json_to_table(submission) as PlayerBlueprintSubmission)),
+		game.table_to_json(interfaces.blueprintSubmission(game.json_to_table(submission) as BlueprintSubmission)),
 });
 
 if (script.active_mods['gvv']) {

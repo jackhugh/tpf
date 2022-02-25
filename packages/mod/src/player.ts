@@ -2,9 +2,10 @@
 const SUMBISSION_TIMEOUT = 0;
 
 export interface Player {
-	totalBlueprints: number;
-	lastBlueprint: number;
 	username: string;
+	lastBlueprint: number;
+	totalBlueprints: number;
+	totalPickips: number;
 }
 
 export type Players = Record<Player['username'], Player>;
@@ -21,9 +22,10 @@ export function ticksUntilPlayerCanBuild(username: string) {
 
 export function playerHasBuilt(username: string) {
 	global.players[username] = global.players[username] ?? {
+		username,
 		lastBlueprint: 0,
 		totalBlueprints: 0,
-		username,
+		totalPickips: 0,
 	};
 	global.players[username]!.lastBlueprint = game.tick;
 	global.players[username]!.totalBlueprints++;

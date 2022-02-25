@@ -9,12 +9,10 @@ export function createGhosts(position: PositionTable, blueprintStack: BlueprintI
 		position: position,
 		surface: game.surfaces[1]!,
 	});
-	if (ghosts) {
-		global.ghostQueue[0]!.push(...ghosts);
-	}
+	global.ghostQueue[0]!.push(...ghosts);
 }
 
-export function buildGhosts(ghosts: GhostEntity[]) {
+export function reviveGhosts(ghosts: GhostEntity[]) {
 	const outstanding: GhostEntity[] = [];
 	ghosts.forEach((ghost) => {
 		if (ghost.valid) {

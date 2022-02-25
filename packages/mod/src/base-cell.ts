@@ -18,7 +18,7 @@ export function createBaseCell(): CellBase {
 
 	createGhosts(cell.mapPosition, global.baseCellBlueprintStack);
 
-	const mapId = printCellId(cell.index, {
+	const mapId = renderCellId(cell.index, {
 		x: cell.mapPosition.x,
 		y: cell.mapPosition.y + (config.size - config.overlap) / 2 - 4,
 	});
@@ -29,7 +29,7 @@ export function createBaseCell(): CellBase {
 	};
 }
 
-function printCellId(id: number, position: PositionTable) {
+function renderCellId(id: number, position: PositionTable) {
 	return rendering.draw_text({
 		color: [0, 0, 0, 0.8],
 		surface: game.surfaces[1]!,

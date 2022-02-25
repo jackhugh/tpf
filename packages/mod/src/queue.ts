@@ -1,15 +1,20 @@
-import { buildGhosts as reviveGhosts } from './build';
+import { reviveGhosts as reviveGhosts } from './build';
 import { PlayerBlueprint } from './player-blueprint';
 import { createPlayerCell } from './player-cell';
-import { ServerBlueprint } from './server-blueprint';
 
 // TODO - move this somewhere that makes more sense
+export interface ServerBlueprint {
+	type: 'server';
+	contents: 'depot' | 'provider';
+}
 export type Blueprint = PlayerBlueprint | ServerBlueprint;
 
 export type BlueprintQueue = Blueprint[];
+
+// TODO maybe need more than 2 queues? What if train is built on multiple rails and only 1 gets built each cycle?
 export type GhostQueue = [GhostEntity[], GhostEntity[]];
 
-const GHOSTS_PER_TICK = 10;
+const GHOSTS_PER_TICK = 1;
 
 // TODO explore using a queue object as passing around - the previous issue was that `createPlayerCell` needed to return the cell and the ghosts
 // I like the idea of just having cell objects in different states and that way ghosts can be stored in the cell itself
@@ -55,6 +60,9 @@ function createNextQueued() {
 	switch (nextQueued.type) {
 		case 'player': {
 			createPlayerCell(nextQueued);
+			break;
+		}
+		case 'server': {
 			break;
 		}
 	}

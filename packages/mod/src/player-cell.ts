@@ -4,9 +4,9 @@ import { playerHasBuilt } from './player';
 import { PlayerBlueprint } from './player-blueprint';
 
 export interface PlayerCell extends CellBase {
+	type: 'player';
 	username: string;
 	renderUsernameRef: number;
-	type: 'player';
 }
 
 export function createPlayerCell(blueprint: PlayerBlueprint) {
@@ -14,7 +14,7 @@ export function createPlayerCell(blueprint: PlayerBlueprint) {
 
 	createGhosts(baseCell.mapPosition, blueprint.blueprintStack);
 
-	const mapUsername = printPlayerUsername(blueprint.username, baseCell.mapPosition);
+	const mapUsername = renderPlayerUsername(blueprint.username, baseCell.mapPosition);
 
 	playerHasBuilt(blueprint.username);
 
@@ -27,7 +27,7 @@ export function createPlayerCell(blueprint: PlayerBlueprint) {
 	global.cells[cell.index] = cell;
 }
 
-function printPlayerUsername(username: string, position: PositionTable) {
+function renderPlayerUsername(username: string, position: PositionTable) {
 	return rendering.draw_text({
 		color: [math.random(), math.random(), math.random()],
 		surface: game.surfaces[1]!,
